@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -7,13 +6,15 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { ThemeProvider } from '@/components/ThemeProvider';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { trpc } from '@/utils/trpc';
 import { useState, useEffect, useCallback } from 'react';
 import { Trash2, Edit2, Plus } from 'lucide-react';
 // Using type-only import for better TypeScript compliance
 import type { Todo, CreateTodoInput, UpdateTodoInput } from '../../server/src/schema';
 
-function App() {
+function TodoApp() {
   // Explicit typing with Todo interface
   const [todos, setTodos] = useState<Todo[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -132,21 +133,26 @@ function App() {
   const totalCount = todos.length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4 transition-colors duration-300">
       <div className="container mx-auto max-w-4xl">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">✨ Todo App</h1>
-          <p className="text-gray-600">Stay organized and get things done!</p>
+        <div className="text-center mb-8 relative">
+          {/* Theme Toggle */}
+          <div className="absolute top-0 right-0">
+            <ThemeToggle />
+          </div>
+          
+          <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2 transition-colors duration-300">✨ Todo App</h1>
+          <p className="text-gray-600 dark:text-gray-400 transition-colors duration-300">Stay organized and get things done!</p>
           {totalCount > 0 && (
             <div className="flex justify-center gap-4 mt-4">
-              <Badge variant="secondary" className="text-sm">
+              <Badge variant="secondary" className="text-sm bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors duration-300">
                 📝 Total: {totalCount}
               </Badge>
-              <Badge variant="default" className="text-sm bg-green-500">
+              <Badge variant="default" className="text-sm bg-green-500 dark:bg-green-600 hover:bg-green-600 dark:hover:bg-green-700 transition-colors duration-300">
                 ✅ Completed: {completedCount}
               </Badge>
-              <Badge variant="outline" className="text-sm">
+              <Badge variant="outline" className="text-sm border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 transition-colors duration-300">
                 ⏳ Remaining: {totalCount - completedCount}
               </Badge>
             </div>
@@ -154,13 +160,13 @@ function App() {
         </div>
 
         {/* Add Todo Form */}
-        <Card className="mb-8 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+        <Card className="mb-8 shadow-lg border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm transition-colors duration-300">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-gray-800 dark:text-gray-100 transition-colors duration-300">
               <Plus className="h-5 w-5" />
               Add New Todo
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-gray-600 dark:text-gray-400 transition-colors duration-300">
               Create a new task to keep track of your goals
             </CardDescription>
           </CardHeader>
@@ -173,7 +179,7 @@ function App() {
                   setFormData((prev: CreateTodoInput) => ({ ...prev, title: e.target.value }))
                 }
                 required
-                className="text-lg"
+                className="text-lg bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-800 dark:text-gray-200 placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-300"
               />
               <Textarea
                 placeholder="Add a description (optional) 📝"
@@ -186,8 +192,9 @@ function App() {
                   }))
                 }
                 rows={3}
+                className="bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-800 dark:text-gray-200 placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-300"
               />
-              <Button type="submit" disabled={isLoading} className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700">
+              <Button type="submit" disabled={isLoading} className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 dark:from-blue-600 dark:to-indigo-700 dark:hover:from-blue-700 dark:hover:to-indigo-800 transition-all duration-300">
                 {isLoading ? '✨ Creating...' : '🚀 Add Todo'}
               </Button>
             </form>
@@ -196,20 +203,20 @@ function App() {
 
         {/* Todos List */}
         {todos.length === 0 ? (
-          <Card className="text-center py-12 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+          <Card className="text-center py-12 shadow-lg border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm transition-colors duration-300">
             <CardContent>
               <div className="text-6xl mb-4">🎉</div>
-              <h3 className="text-xl font-semibold text-gray-700 mb-2">No todos yet!</h3>
-              <p className="text-gray-500">Create your first todo above to get started.</p>
+              <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">No todos yet!</h3>
+              <p className="text-gray-500 dark:text-gray-400 transition-colors duration-300">Create your first todo above to get started.</p>
             </CardContent>
           </Card>
         ) : (
           <div className="space-y-4">
             {todos.map((todo: Todo) => (
-              <Card key={todo.id} className={`shadow-lg border-0 transition-all duration-200 hover:shadow-xl ${
+              <Card key={todo.id} className={`shadow-lg border-0 transition-all duration-300 hover:shadow-xl ${
                 todo.completed 
-                  ? 'bg-green-50/80 backdrop-blur-sm border-l-4 border-l-green-400' 
-                  : 'bg-white/80 backdrop-blur-sm border-l-4 border-l-blue-400'
+                  ? 'bg-green-50/80 dark:bg-green-900/20 backdrop-blur-sm border-l-4 border-l-green-400 dark:border-l-green-500' 
+                  : 'bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-l-4 border-l-blue-400 dark:border-l-blue-500'
               }`}>
                 <CardContent className="p-6">
                   {editingTodo?.id === todo.id ? (
@@ -221,7 +228,7 @@ function App() {
                           setEditFormData((prev) => ({ ...prev, title: e.target.value }))
                         }
                         required
-                        className="text-lg font-semibold"
+                        className="text-lg font-semibold bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-800 dark:text-gray-200 transition-colors duration-300"
                       />
                       <Textarea
                         value={editFormData.description || ''}
@@ -233,12 +240,13 @@ function App() {
                         }
                         rows={3}
                         placeholder="Description (optional)"
+                        className="bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-800 dark:text-gray-200 placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-300"
                       />
                       <div className="flex gap-2">
-                        <Button type="submit" size="sm" className="bg-green-500 hover:bg-green-600">
+                        <Button type="submit" size="sm" className="bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 transition-colors duration-300">
                           ✅ Save
                         </Button>
-                        <Button type="button" variant="outline" size="sm" onClick={cancelEdit}>
+                        <Button type="button" variant="outline" size="sm" onClick={cancelEdit} className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300">
                           ❌ Cancel
                         </Button>
                       </div>
@@ -254,19 +262,19 @@ function App() {
                             className="mt-1"
                           />
                           <div className="flex-1">
-                            <h3 className={`text-lg font-semibold ${
+                            <h3 className={`text-lg font-semibold transition-colors duration-300 ${
                               todo.completed 
-                                ? 'line-through text-gray-500' 
-                                : 'text-gray-800'
+                                ? 'line-through text-gray-500 dark:text-gray-400' 
+                                : 'text-gray-800 dark:text-gray-200'
                             }`}>
                               {todo.completed ? '✅' : '📋'} {todo.title}
                             </h3>
                             {/* Handle nullable description */}
                             {todo.description && (
-                              <p className={`mt-1 ${
+                              <p className={`mt-1 transition-colors duration-300 ${
                                 todo.completed 
-                                  ? 'text-gray-400 line-through' 
-                                  : 'text-gray-600'
+                                  ? 'text-gray-400 dark:text-gray-500 line-through' 
+                                  : 'text-gray-600 dark:text-gray-400'
                               }`}>
                                 {todo.description}
                               </p>
@@ -278,28 +286,28 @@ function App() {
                             variant="ghost"
                             size="sm"
                             onClick={() => startEdit(todo)}
-                            className="hover:bg-blue-100"
+                            className="hover:bg-blue-100 dark:hover:bg-blue-900/50 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300"
                           >
                             <Edit2 className="h-4 w-4" />
                           </Button>
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
-                              <Button variant="ghost" size="sm" className="hover:bg-red-100 text-red-600">
+                              <Button variant="ghost" size="sm" className="hover:bg-red-100 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors duration-300">
                                 <Trash2 className="h-4 w-4" />
                               </Button>
                             </AlertDialogTrigger>
-                            <AlertDialogContent>
+                            <AlertDialogContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 transition-colors duration-300">
                               <AlertDialogHeader>
-                                <AlertDialogTitle>Delete Todo</AlertDialogTitle>
-                                <AlertDialogDescription>
+                                <AlertDialogTitle className="text-gray-800 dark:text-gray-200 transition-colors duration-300">Delete Todo</AlertDialogTitle>
+                                <AlertDialogDescription className="text-gray-600 dark:text-gray-400 transition-colors duration-300">
                                   Are you sure you want to delete "{todo.title}"? This action cannot be undone.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogCancel className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300">Cancel</AlertDialogCancel>
                                 <AlertDialogAction
                                   onClick={() => handleDelete(todo.id)}
-                                  className="bg-red-500 hover:bg-red-600"
+                                  className="bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 transition-colors duration-300"
                                 >
                                   Delete
                                 </AlertDialogAction>
@@ -309,9 +317,9 @@ function App() {
                         </div>
                       </div>
                       
-                      <Separator className="my-3" />
+                      <Separator className="my-3 bg-gray-200 dark:bg-gray-600 transition-colors duration-300" />
                       
-                      <div className="flex justify-between items-center text-sm text-gray-500">
+                      <div className="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400 transition-colors duration-300">
                         <span>📅 Created: {todo.created_at.toLocaleDateString()}</span>
                         <span>🔄 Updated: {todo.updated_at.toLocaleDateString()}</span>
                       </div>
@@ -324,6 +332,14 @@ function App() {
         )}
       </div>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <TodoApp />
+    </ThemeProvider>
   );
 }
 
